@@ -45,6 +45,8 @@ namespace Gamekit3D
 
         protected Vector3 m_RememberedTargetPosition;
 
+        public AnalyticsManager analyticsManager; //needs reference
+
         protected void OnEnable()
         {
             m_Controller = GetComponentInChildren<EnemyController>();
@@ -72,6 +74,8 @@ namespace Gamekit3D
 
         public void Death(Damageable.DamageMessage msg)
         {
+            analyticsManager.EnemyDefeated(); //adds to death counter when killed
+
             Vector3 pushForce = transform.position - msg.damageSource;
 
             pushForce.y = 0;

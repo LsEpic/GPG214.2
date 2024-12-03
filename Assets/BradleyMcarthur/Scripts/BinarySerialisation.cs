@@ -8,10 +8,10 @@ using System.Text;
 
 public class BinarySerialisation : MonoBehaviour
 {
-    [SerializeField] private LevelProgress progress;
+    [SerializeField] private SaveData progress;
 
     public string folderPath = Application.streamingAssetsPath;
-    public string fileName = "";
+    public string fileName = "Save Data";
     private string destinationPath;
 
     // Start is called before the first frame update
@@ -35,7 +35,7 @@ public class BinarySerialisation : MonoBehaviour
 
     void Save()
     {
-        XmlSerializer xmlSerialiser = new XmlSerializer(typeof(LevelProgress));
+        XmlSerializer xmlSerialiser = new XmlSerializer(typeof(SaveData));
         string xml = "";
 
         using (StringWriter writer = new StringWriter())
@@ -86,11 +86,11 @@ public class BinarySerialisation : MonoBehaviour
 
             //Converts the 64 back to String
 
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(LevelProgress));
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(SaveData));
 
             using(StringReader reader = new StringReader(xmlString))
             {
-                progress = (LevelProgress)xmlSerializer.Deserialize(reader);
+                progress = (SaveData)xmlSerializer.Deserialize(reader);
             }
 
             Debug.Log("Load Complete");

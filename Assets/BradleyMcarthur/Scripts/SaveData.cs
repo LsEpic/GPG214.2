@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class LevelProgress
+public class SaveData
 {
     public Vector3 lastCheckpointPosition;
-    public float enemiesKilled;
-    public string playerName;
+    public int switchesPressed;
 
 }

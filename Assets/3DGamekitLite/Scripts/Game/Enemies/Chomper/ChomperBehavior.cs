@@ -48,6 +48,8 @@ namespace Gamekit3D
         protected EnemyController m_Controller;
         protected TargetDistributor.TargetFollower m_FollowerInstance = null;
 
+        public AnalyticsManager analyticsManager; //Needs Referecne
+
         protected void OnEnable()
         {
             m_Controller = GetComponentInChildren<EnemyController>();
@@ -233,6 +235,8 @@ namespace Gamekit3D
 
         public void Death(Damageable.DamageMessage msg)
         {
+            analyticsManager.EnemyDefeated();
+
             Vector3 pushForce = transform.position - msg.damageSource;
 
             pushForce.y = 0;

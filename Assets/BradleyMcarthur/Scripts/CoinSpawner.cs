@@ -15,7 +15,16 @@ public class CoinSpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-         SpawnCoinsFromImage();
+         
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.C))
+        {
+            SpawnCoinsFromImage();
+        }
+        
     }
 
     void SpawnCoinsFromImage()
