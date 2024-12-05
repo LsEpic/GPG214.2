@@ -17,7 +17,14 @@ public class BinarySerialisation : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        destinationPath = Path.Combine(folderPath, fileName);
+        if (folderPath != null) //check that streaming assets folder exists
+        {
+            destinationPath = Path.Combine(folderPath, fileName);
+        }
+        else
+        {
+            Debug.Log("No Streaming Assets Folder");
+        }
     }
 
     // Update is called once per frame

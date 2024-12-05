@@ -7,5 +7,6 @@ public class SaveData
 {
     public Vector3 lastCheckpointPosition;
     public int switchesPressed;
+    public bool dashUnlocked;
 
 }

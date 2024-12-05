@@ -45,7 +45,14 @@ namespace Gamekit3D
 
         protected Vector3 m_RememberedTargetPosition;
 
-        public AnalyticsManager analyticsManager; //needs reference
+        //My Additions
+        public AnalyticsManager analyticsManager;
+        public DashUnlock dashUnlock;
+
+        private void Start()
+        {
+            dashUnlock = GameObject.FindObjectOfType<DashUnlock>(); //Find Enabler
+        }
 
         protected void OnEnable()
         {
@@ -74,7 +81,13 @@ namespace Gamekit3D
 
         public void Death(Damageable.DamageMessage msg)
         {
+            //My Additions
             analyticsManager.EnemyDefeated(); //adds to death counter when killed
+            if (dashUnlock != null && !dashUnlock.IsDashEnabled())
+            {
+                dashUnlock.EnableDash();
+            }
+            //end
 
             Vector3 pushForce = transform.position - msg.damageSource;
 
