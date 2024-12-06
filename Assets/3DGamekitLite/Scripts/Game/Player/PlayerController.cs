@@ -9,6 +9,8 @@ namespace Gamekit3D
     [RequireComponent(typeof(Animator))]
     public class PlayerController : MonoBehaviour, IMessageReceiver
     {
+        private SaveManager saveManager; // My Class
+
         protected static PlayerController s_Instance;
         public static PlayerController instance { get { return s_Instance; } }
 
@@ -677,6 +679,16 @@ namespace Gamekit3D
             m_VerticalSpeed = 0f;
             m_Respawning = true;
             m_Damageable.isInvulnerable = true;
+
+            //my addition
+            if(SaveManager.Instance != null && SaveManager.Instance.saveData != null) //check if savemanager is available
+            {
+                SaveManager.Instance.saveData.AddDeath();
+            }
+            else
+            {
+                Debug.LogWarning("No Instance Found!");
+            }
         }
     }
 }

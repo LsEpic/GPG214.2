@@ -47,11 +47,11 @@ namespace Gamekit3D
 
         //My Additions
         public AnalyticsManager analyticsManager;
-        public DashUnlock dashUnlock;
+        private SaveManager saveManager;
 
         private void Start()
         {
-            dashUnlock = GameObject.FindObjectOfType<DashUnlock>(); //Find Enabler
+            //dashUnlock = GameObject.FindObjectOfType<DashUnlock>(); //Find Enabler
         }
 
         protected void OnEnable()
@@ -82,10 +82,13 @@ namespace Gamekit3D
         public void Death(Damageable.DamageMessage msg)
         {
             //My Additions
-            analyticsManager.EnemyDefeated(); //adds to death counter when killed
-            if (dashUnlock != null && !dashUnlock.IsDashEnabled())
+            if(SaveManager.Instance != null)
             {
-                dashUnlock.EnableDash();
+                SaveManager.Instance.saveData.DashUnlocked = true;
+            }
+            else
+            {
+                Debug.LogWarning("No Instance Found!");
             }
             //end
 

@@ -6,9 +6,15 @@ using System.Xml.Serialization;
 using UnityEngine;
 using System.Text;
 
-public class BinarySerialisation : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
-    [SerializeField] private SaveData progress;
+    #region Classes
+    private SaveData saveData;
+    [SerializeField] private SaveManager saveManager;
+    [SerializeField] private PlayerDash dashScript;
+    #endregion
+
+    public Canvas popup;
 
     public string folderPath = Application.streamingAssetsPath;
     public string fileName = "Save Data";
@@ -17,6 +23,8 @@ public class BinarySerialisation : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        saveData = SaveManager.Instance.saveData;
+
         if (folderPath != null) //check that streaming assets folder exists
         {
             destinationPath = Path.Combine(folderPath, fileName);
@@ -25,19 +33,66 @@ public class BinarySerialisation : MonoBehaviour
         {
             Debug.Log("No Streaming Assets Folder");
         }
+
+        // Ensure the dash script is initially disabled
+        if (dashScript != null)
+        {
+            dashScript.enabled = false;
+        }
+
+        popup.enabled = false;
+        saveData.OnDashUnlocked += EnableDash; //subscribes to event
     }
 
     // Update is called once per frame
     void Update()
     {
+        // Update player position vector
         if(Input.GetKeyDown(KeyCode.E))
         {
+            GameObject player = GameObject.FindWithTag("Player"); // Find player in the scene
+            if (player != null)
+            {
+                saveData.SetLastCheckpoint(player.transform.position);
+            }
+
             Save();
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
             Load();
         }
+
+        //this allows player to dash when loading save data if theyve already unlocked it.
+        if(saveData.dashUnlocked == true)
+        {
+            dashScript.enabled = true;
+        }
+    }
+
+    //unlocks dash script
+    public void EnableDash()
+    {
+        ShowAchievement();
+
+        if (dashScript != null)
+        {
+            dashScript.enabled = true;
+        }
+    }
+
+    public void ShowAchievement()
+    {
+        StartCoroutine(UnlockAchievementPopup());
+    }
+
+    public IEnumerator UnlockAchievementPopup()
+    {
+        popup.enabled = true;
+
+        yield return new WaitForSeconds(4);
+
+        popup.enabled = false;
     }
 
     void Save()
@@ -47,7 +102,7 @@ public class BinarySerialisation : MonoBehaviour
 
         using (StringWriter writer = new StringWriter())
         {
-            xmlSerialiser.Serialize(writer, progress);
+            xmlSerialiser.Serialize(writer, saveData);
             xml = writer.ToString();
         }
 
@@ -97,10 +152,21 @@ public class BinarySerialisation : MonoBehaviour
 
             using(StringReader reader = new StringReader(xmlString))
             {
-                progress = (SaveData)xmlSerializer.Deserialize(reader);
+                SaveManager.Instance.saveData = (SaveData)xmlSerializer.Deserialize(reader);
+                saveData = SaveManager.Instance.saveData;
             }
 
             Debug.Log("Load Complete");
+
+            if (saveData.lastCheckpointPosition != Vector3.zero)
+            {
+                
+                GameObject player = GameObject.FindWithTag("Player"); // Find player in the scene
+                if (player != null)
+                {
+                    player.transform.position = saveData.lastCheckpointPosition;
+                }
+            }
         }
         else
         {
