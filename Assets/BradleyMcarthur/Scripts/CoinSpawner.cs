@@ -12,12 +12,6 @@ public class CoinSpawner : MonoBehaviour
     public float spacing;
     public float coinPixelSize;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-         
-    }
-
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.C))

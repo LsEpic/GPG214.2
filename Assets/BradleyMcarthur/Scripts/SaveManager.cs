@@ -5,7 +5,6 @@ using UnityEngine;
 public class SaveManager : MonoBehaviour
 {
     public static SaveManager Instance { get; private set; }
-
     public SaveData saveData = new SaveData();
 
     private void Awake()
